@@ -1,0 +1,11 @@
+BOOT_TIME_EPOCH 1546494242777,,,,,,,,,,,,,
+BOOT_UPTIME_MILLIS 135913,,,,,,,,,,,,,
+time, event_marker,condition,start_identity, start_item_center_x, start_item_center_y, start_item_width, start_item_height,end_identity, end_item_center_x, end_item_center_y, end_item_width, end_item_height, path_type
+137964, START,taskA,bunny,150,656,300,300,carrot,1770,800,300,300, NONE
+147816, START,taskA,bunny,150,531,300,300,carrot,1770,482,300,300, NONE
+157669, START,taskA,bunny,150,307,300,300,carrot,1770,162,300,300, NONE
+185279, START,taskA,bunny,150,693,300,300,carrot,1770,263,300,300, NONE
+193135, START,taskB,bunny,150,328,300,300,carrot,1770,594,300,300, NONE
+217280, START,taskB,bunny,150,634,300,300,carrot,1770,299,300,300, NONE
+247738, START,taskB,bunny,150,241,300,300,carrot,1770,832,300,300, NONE
+265482, START,taskB,bunny,150,694,300,300,carrot,1770,439,300,300, NONE
