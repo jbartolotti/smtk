@@ -49,7 +49,7 @@ importRaw.Tablet <- function(folder,
 #' @param pid Participant ID
 #' @param tablet_dat can either be a list obtained with importRaw.Tablet, or a folder name to load
 #' @param figdir where to save figures. Defaults to current directory. 'none' to skip saving figures
-#' @param config can be 'default' to load default values, or a list with fields that overwrite the defaults, or <FEATURE NOT SUPPORTED YET> a text file containing field-value pairs to overwrite the defaults.
+#' @param config can be 'default' to load default values, or a list with fields that overwrite the defaults, or (FEATURE NOT SUPPORTED YET) a text file containing field-value pairs to overwrite the defaults.
 procOneP.Tablet <- function(pid, tablet_dat, figdir = getwd(), resultsdir = getwd(),
                        config = 'default'){
   # this will be returned at the end of the function and contain all figure handles and processed data.

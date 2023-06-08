@@ -2,16 +2,28 @@
 % Please edit documentation in R/interface.R
 \name{importRaw.Tablet}
 \alias{importRaw.Tablet}
-\title{importRaw.Tablet}
+\title{importRaw.Tablet
+Read raw text files output by the SMTK Tablet Application
+for further processing.}
 \usage{
-importRaw.Tablet(folder)
+importRaw.Tablet(
+  folder,
+  preheader = 2,
+  filelist = c("accel", "event", "touch")
+)
 }
 \arguments{
 \item{folder}{the location of the folder containing the tablet accelerometer, touch, and event text files}
+
+\item{preheader}{The number of header files in the data files to ignore. Default = 2}
+
+\item{filelist}{The data type suffixes of the filenames to load. Default = c('accel','event','touch')}
 }
 \value{
 A list with subfields for each of the three data files
 }
 \description{
 importRaw.Tablet
+Read raw text files output by the SMTK Tablet Application
+for further processing.
 }
