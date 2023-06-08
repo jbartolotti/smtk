@@ -1,3 +1,5 @@
+library(smtk)
+
 # Demo Data Analysis
 data_dir <- file.path('smtk_demo_data','tablet','9999')
 
