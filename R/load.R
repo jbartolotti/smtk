@@ -11,10 +11,24 @@ LOAD.import_tablet_data <- function(folder, preheader = 2, filelist = c('accel',
     boottimes = read.csv(file = file.path(folder,filename),nrows = preheader, sep = ' ', header = FALSE, stringsAsFactors = FALSE)
     colnames(boottimes) = c('label','ms')
     boottimes$derivative = deriv
+    if(is.na(boottimes$ms[1])){
+      strsplit(boottimes$label[1],'BOOT_TIME_EPOCH')[[1]][2]
+    }
+    if(is.na(boottimes$ms[2])){
+      strsplit(boottimes$label[2],'BOOT_UPTIME_EPOCH')[[1]][2]
+    }
+
     all_boottimes[[deriv]] = boottimes
 
     dfs[[deriv]] = read.csv(file = file.path(folder,filename), sep = ',', skip = preheader,stringsAsFactors = FALSE)
-    dfs[[deriv]]$delta_time = c(0,diff(dfs[[deriv]]$time))
+    # Can't do delta time here, because multiple readings for simultaneous touches get subsequent lines, and thus throw off dt. Have to do it after splitting touches.
+    #    dfs[[deriv]]$delta_time = c(0,diff(dfs[[deriv]]$time))
+
+    # If path type and direction columns included, and no condition column, create condition by combining type+dir
+    if('path_type' %in% names(dfs[[deriv]]) && 'path_direction' %in% names(dfs[[deriv]]) && !('condition' %in% names(dfs[[deriv]])) ){
+      dfs[[deriv]]$condition <- paste(trimws(dfs[[deriv]]$path_type), trimws(dfs[[deriv]]$path_direction), sep = '-')
+    }
+
     totrim = sapply(dfs[[deriv]], typeof) == 'character'
     for(i in 1:dim(dfs[[deriv]])[2])
     {
@@ -31,15 +45,15 @@ LOAD.import_tablet_data <- function(folder, preheader = 2, filelist = c('accel',
 
 # Get the names of the start and end pictures if available, or use defaults.
 LOAD.getPics <- function(eventdat, resources){
-  if('start_identity' %in% names(eventdat)){
-    start_identity <- eventdat$start_identity
+  if('start_item_name' %in% names(eventdat)){
+    start_identity <- eventdat$start_item_name
   } else {
     start_identity <- 'bunny'
   }
   start_picture <- resources[[start_identity]]
 
-  if('end_identity' %in% names(eventdat)){
-    end_identity <- eventdat$end_identity
+  if('end_item_name' %in% names(eventdat)){
+    end_identity <- eventdat$end_item_name
   } else {
     end_identity <- 'carrot'
   }
@@ -54,6 +68,11 @@ LOAD.resources <- function(config){
   resources <- list()
   suppressWarnings(resources$bunny <- png::readPNG(system.file('extdata','resources','bunny_transp.png', package = 'smtk')))
   resources$carrot <- png::readPNG(system.file('extdata','resources','carrot_transp.png', package = 'smtk'))
+  resources$BUNNY <- resources$bunny
+  resources$CARROT <- resources$carrot
+  suppressWarnings(resources$straight <- png::readPNG(system.file('extdata','resources','path_straight_1600.png', package = 'smtk')))
+  suppressWarnings(resources$curved <- png::readPNG(system.file('extdata','resources','path_curved_1600.png', package = 'smtk')))
+
 
   if(config$filter_type == 'butter'){
     if (config$filter_Fn == 'Fe/2'){
@@ -116,6 +135,10 @@ LOAD.defaultConfig <- function(){
   config$tablet_preheader <- 2
   config$tablet_filelist <- c('accel','event','touch')
   config$process_trials <- 'all'
+  config$process_blocks <- 'all'
+  config$path_types <- c('straight', 'curved')
+  config$directions <- c('leftright', 'rightleft')
+  config$mergesample_threshold_ms <- 7
 
   config$filter_type <- 'butter'
   config$filter_Fe <- 120 # sampling frequency
@@ -138,8 +161,49 @@ LOAD.defaultConfig <- function(){
   config$accel_filter_N <- 4 # filter order
   config$accel_filter_pass <- 'low'
 
+  #centery is relative to the center of the start item
+  config$curved_pathdef <- list(
+    centerx1 = 481, centerx2 = 1143,
+    centery1 = 191, centery2 = -191,
+    radius1 = 382, radius2 = 382,
+    thetastart1 = 7/6*pi, thetastart2 = 5/6*pi,
+    thetaend1 = 11/6*pi, thetaend2 = 1/6*pi,
+    numpoint1 = 100, numpoint2 = 100
+    )
 
+  xloc <- function(t,centerx,radius){
+    return(centerx+radius*cos(t))
+  }
+  yloc <- function(t,centery,radius){
+    return(centery+radius*sin(t))
+  }
+  ts1 <- seq(from=config$curved_pathdef$thetastart1,
+             to = config$curved_pathdef$thetaend1,
+             length.out = config$curved_pathdef$numpoint1)
+  ts2 <- seq(from=config$curved_pathdef$thetastart2,
+             to = config$curved_pathdef$thetaend2,
+             length.out = config$curved_pathdef$numpoint2)
+  config$curved_pathpoints <- data.frame(
+    t = 1:(length(ts1)+length(ts2)),
+    x = c( xloc(ts1, config$curved_pathdef$centerx1, config$curved_pathdef$radius1),
+           xloc(ts2, config$curved_pathdef$centerx2, config$curved_pathdef$radius2)),
+    y = c( yloc(ts1, config$curved_pathdef$centery1, config$curved_pathdef$radius1),
+           yloc(ts2, config$curved_pathdef$centery2, config$curved_pathdef$radius2))
+    )
 
+  config$straight_pathdef <- list(
+    startx = 150, endx = 1750,
+    starty = 0, endy = 0,
+    numpoint = 200)
+  config$straight_pathpoints <- data.frame(
+    t = 1:config$straight_pathdef$numpoint,
+    x = seq(from = config$straight_pathdef$startx,
+            to = config$straight_pathdef$endx,
+            length.out = config$straight_pathdef$numpoint),
+    y = seq(from = config$straight_pathdef$starty,
+            to = config$straight_pathdef$endy,
+            length.out = config$straight_pathdef$numpoint)
+  )
 
   return(config)
 }

@@ -1,0 +1,23 @@
+BOOT_TIME_EPOCH1688710950070
+BOOT_UPTIME_MILLIS 4939973
+time, event_marker, start_item_name, start_item_center_x, start_item_center_y, start_item_width, start_item_height, end_item_name, end_item_center_x, end_item_center_y, end_item_width, end_item_height, block_number, trial_number, path_type, path_direction
+4943246, START, CARROT, 150.0, 592.0, 300, 300, BUNNY, 1495.0, 592.0, 300, 300, 1, 1, curved, leftright
+4950235, START, CARROT, 150.0, 417.0, 300, 300, BUNNY, 1495.0, 417.0, 300, 300, 1, 2, curved, leftright
+4956396, START, CARROT, 150.0, 499.0, 300, 300, BUNNY, 1495.0, 499.0, 300, 300, 1, 3, curved, leftright
+4967684, START, CARROT, 150.0, 720.0, 300, 300, BUNNY, 1495.0, 720.0, 300, 300, 1, 4, curved, leftright
+4978276, START, CARROT, 150.0, 717.0, 300, 300, BUNNY, 1495.0, 717.0, 300, 300, 1, 5, curved, leftright
+4987967, START, CARROT, 1495.0, 603.0, 300, 300, BUNNY, 150.0, 603.0, 300, 300, 2, 1, curved, rightleft
+4993300, START, CARROT, 1495.0, 472.0, 300, 300, BUNNY, 150.0, 472.0, 300, 300, 2, 2, curved, rightleft
+4997324, START, CARROT, 1495.0, 584.0, 300, 300, BUNNY, 150.0, 584.0, 300, 300, 2, 3, curved, rightleft
+5000336, START, CARROT, 1495.0, 313.0, 300, 300, BUNNY, 150.0, 313.0, 300, 300, 2, 4, curved, rightleft
+5003424, START, CARROT, 1495.0, 594.0, 300, 300, BUNNY, 150.0, 594.0, 300, 300, 2, 5, curved, rightleft
+5007931, START, CARROT, 150.0, 506.0, 300, 300, BUNNY, 1770.0, 506.0, 300, 300, 3, 1, straight, leftright
+5011480, START, CARROT, 150.0, 474.0, 300, 300, BUNNY, 1770.0, 474.0, 300, 300, 3, 2, straight, leftright
+5014612, START, CARROT, 150.0, 388.0, 300, 300, BUNNY, 1770.0, 388.0, 300, 300, 3, 3, straight, leftright
+5019007, START, CARROT, 150.0, 857.0, 300, 300, BUNNY, 1770.0, 857.0, 300, 300, 3, 4, straight, leftright
+5021880, START, CARROT, 150.0, 334.0, 300, 300, BUNNY, 1770.0, 334.0, 300, 300, 3, 5, straight, leftright
+5026317, START, CARROT, 1770.0, 756.0, 300, 300, BUNNY, 150.0, 756.0, 300, 300, 4, 1, straight, rightleft
+5029180, START, CARROT, 1770.0, 741.0, 300, 300, BUNNY, 150.0, 741.0, 300, 300, 4, 2, straight, rightleft
+5031965, START, CARROT, 1770.0, 731.0, 300, 300, BUNNY, 150.0, 731.0, 300, 300, 4, 3, straight, rightleft
+5034835, START, CARROT, 1770.0, 706.0, 300, 300, BUNNY, 150.0, 706.0, 300, 300, 4, 4, straight, rightleft
+5039194, START, CARROT, 1770.0, 254.0, 300, 300, BUNNY, 150.0, 254.0, 300, 300, 4, 5, straight, rightleft

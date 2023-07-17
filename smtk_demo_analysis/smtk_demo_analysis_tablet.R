@@ -5,7 +5,7 @@ data_dir <- file.path('smtk_demo_data','tablet','9998')
 
 # Get picture resources and configuration values.
 config <- LOAD.config('default')
-#config$process_trials <- 4 #Instead of 'all'
+config$process_trials <- 4 #Instead of 'all'
 
 resources <- LOAD.resources(config)
 
