@@ -322,7 +322,7 @@ FIGURES.TouchSlope.Tablet <- function(dat, config, dofig, figdir, trial_label, t
   #apply standard formatting to reflect tablet screen
   f1 <- FIGURES.format_plot(f1, config, 'touch', plot_title = sprintf('Slope\nParticipant %s, Condition %s, Trial %s, Touch %s',trial_label$pid,trial_label$cond,trial_label$trial,trial_label$touch))
   #overwrite viridis color with a gradient scaled farther or closer relative to smooth movement
-  f1 <- f1 + ggplot2::scale_color_gradientn(limits = c(-1*r_extent_s, r_extent_s), colors = c('blue','cyan','#AAAAAA','yellow','red'), values = c(0,.49,.5,.51,1), name = 'Slope')
+  f1 <- f1 + ggplot2::scale_color_gradientn(limits = c(-1*r_extent, r_extent), colors = c('blue','cyan','#AAAAAA','yellow','red'), values = c(0,.49,.5,.51,1), name = 'Slope')
 
   if(dofig){
     dir.create(file.path(figdir, 'slope'), recursive = TRUE, showWarnings = FALSE)
