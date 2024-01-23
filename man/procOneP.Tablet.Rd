@@ -10,7 +10,8 @@ procOneP.Tablet(
   tablet_dat,
   figdir = getwd(),
   resultsdir = getwd(),
-  config = "default"
+  config = "default",
+  runcond = c("overview", "deriv")
 )
 }
 \arguments{

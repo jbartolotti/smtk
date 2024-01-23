@@ -3,4 +3,5 @@
 export(LOAD.config)
 export(LOAD.resources)
 export(importRaw.Tablet)
+export(procOneP.Tablet)
 export(smtdemo)
