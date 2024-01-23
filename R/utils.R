@@ -5,7 +5,7 @@ UTILS.range_plusminus1 <- function(x, ...){
 }
 
 UTILS.PointToCurve <- function(pointx, pointy, curvexs, curveys){
-  sqer <- unlist(lapply(1:dim(curvedf)[1], function(n){UTILS.SqEr(pointx, pointy, curvexs[n], curveys[n])}))
+  sqer <- unlist(lapply(1:length(curvexs), function(n){UTILS.SqEr(pointx, pointy, curvexs[n], curveys[n])}))
   return(sqer)
 
 }
