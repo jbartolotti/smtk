@@ -80,15 +80,24 @@ PROCESS.OnePTouch.Tablet <- function(tablet_dat, config, resources, pid){
         #If there are two samples in a row that are each less than 7 ms, delete the first one. This will essentially combine the two into a single sample closer to the standard 8ms sampling rate.
         delrow <- logical(length = dim(dd)[1])
         for(i in 1:(dim(dd)[1]-1)){
-          delrow[i] <- dd$delta_time[i] < config$mergesample_threshold_ms & dd$delta_time[i+1] < config$mergesample_threshold_ms
+          do_delete <- dd$delta_time[i] < config$mergesample_threshold_ms & dd$delta_time[i+1] < config$mergesample_threshold_ms
+          if(do_delete){
+            # Mark the row for deletion, and add its time to the subsequent sample (so that a chain of 5,5,5 becomes 10,5 instead of 15)
+            delrow[i] <- TRUE
+            dd$delta_time[i+1] <- dd$delta_time[i] + dd$delta_time[i+1]
+          }
         }
         dd <- dd[!delrow,]
         if(dim(dd)[1] > 2){
-        #Need to redo delta time after removing rows
+        #Redo delta time after removing rows just in case. It should already be adjusted though.
         dd$delta_time <- c(0, dd$time[2:dim(dd)[1]] - dd$time[1:(dim(dd)[1]-1)] )
 
 
         numt <- dim(dd)[1]
+        dd$x_velocity_raw <- c(diff(dd$touch_x)/dd$delta_time[2:numt],0)
+        dd$x_acceleration_raw <- c(diff(dd$x_velocity_raw)/dd$delta_time[2:numt],0)
+        dd$x_jerk_raw <- c(diff(dd$x_acceleration_raw)/dd$delta_time[2:numt],0)
+
         dd$x_velocity <- c(signal::filtfilt(resources$deriv_filter, diff(dd$touch_x)/dd$delta_time[2:numt]),0)
         dd$x_acceleration <- c(signal::filtfilt(resources$deriv_filter, diff(dd$x_velocity)/dd$delta_time[2:numt]),0)
         dd$x_jerk <- c(signal::filtfilt(resources$deriv_filter, diff(dd$x_acceleration)/dd$delta_time[2:numt]),0)
@@ -100,6 +109,11 @@ PROCESS.OnePTouch.Tablet <- function(tablet_dat, config, resources, pid){
         dd$y_jerk <- c(signal::filtfilt(resources$deriv_filter, diff(dd$y_acceleration)/dd$delta_time[2:numt]),0)
   #      dd$y_velocity[(numt-1):numt] <- NA
   #      dd$y_velocity[(numt-2):numt] <- NA
+
+        dd$y_velocity_raw <- c(diff(dd$touch_y)/dd$delta_time[2:numt],0)
+        dd$y_acceleration_raw <- c(diff(dd$y_velocity_raw)/dd$delta_time[2:numt],0)
+        dd$y_jerk_raw <- c(diff(dd$y_acceleration_raw)/dd$delta_time[2:numt],0)
+
 
         dd$eucdist <- 0
         for(i in 2:(dim(dd)[1])){
@@ -195,6 +209,10 @@ PROCESS.OnePTouch.Tablet <- function(tablet_dat, config, resources, pid){
         dd$travel_jerk <- c(signal::filtfilt(resources$deriv_filter, diff(dd$travel_acceleration)/dd$delta_time[2:numt]),0)
   #      dd$distance_velocity[(numt-1):numt] <- NA
   #      dd$distance_velocity[(numt-2):numt] <- NA
+
+        dd$travel_velocity_raw <- c(diff(dd$travel)/dd$delta_time[2:numt],0)
+        dd$travel_acceleration_raw <- c(diff(dd$travel_velocity_raw)/dd$delta_time[2:numt],0)
+        dd$travel_jerk_raw <- c(diff(dd$travel_acceleration_raw)/dd$delta_time[2:numt],0)
 
 
 

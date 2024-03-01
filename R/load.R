@@ -12,10 +12,12 @@ LOAD.import_tablet_data <- function(folder, preheader = 2, filelist = c('accel',
     colnames(boottimes) = c('label','ms')
     boottimes$derivative = deriv
     if(is.na(boottimes$ms[1])){
-      strsplit(boottimes$label[1],'BOOT_TIME_EPOCH')[[1]][2]
+      boottimes$ms[1]  <- strsplit(boottimes$label[1],'BOOT_TIME_EPOCH')[[1]][2]
+      boottimes$label[1] <- 'BOOT_TIME_EPOCH'
     }
     if(is.na(boottimes$ms[2])){
-      strsplit(boottimes$label[2],'BOOT_UPTIME_EPOCH')[[1]][2]
+      boottimes$ms[2] <- strsplit(boottimes$label[2],'BOOT_UPTIME_EPOCH')[[1]][2]
+      boottimes$label[1] <- 'BOOT_UPTIME_EPOCH'
     }
 
     all_boottimes[[deriv]] = boottimes
