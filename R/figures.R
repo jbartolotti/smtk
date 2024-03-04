@@ -493,7 +493,26 @@ FIGURES.TouchDerivatives.Tablet <- function(pTouchDerivatives, dofig, figdir, tr
     ggplot2::ggsave(file.path(figdir, 'derivatives', sprintf('TouchDerivativesGrid_%s.png',trial_label$figlabel)),
                     plot = f2, width = 6, height = 6)
   }
-  touchderiv <- list(pva = f1, pvaj_grid = f2)
+
+
+  dat <- subset(pTouchDerivatives$long, type == 'raw')
+  dat$metric <- factor(dat$metric, levels = c('x','y','dist'), labels = c('X Position','Y Position','Travel Distance'))
+  dat$degree <- factor(dat$degree, levels = c('position','velocity','acceleration','jerk'))
+  #  first_timepoint <- dat$time[1]
+  f3 <- ggplot2::ggplot(dat, ggplot2::aes(x = (time-timing$trial_start)/1000, y = value, color = degree)) +
+    ggplot2::theme_bw() +
+    ggplot2::geom_line() +
+    ggplot2::coord_cartesian(xlim = c(0, (timing$trial_end-timing$trial_start)/1000)) +
+    ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::scale_color_manual(values = c('black','red','#009900','blue'), guide = 'none') +
+    ggplot2::facet_grid(degree~metric, scales = 'free') +
+    ggplot2::labs(x = 'Time (s)', y = 'pixels', title = sprintf('Participant %s, Condition %s\nTrial %s, Touch %s',trial_label$pid,trial_label$cond,trial_label$trial,trial_label$touch))
+  if(dofig){
+    ggplot2::ggsave(file.path(figdir, 'derivatives', sprintf('TouchDerivativesGrid_Unfilt_%s.png',trial_label$figlabel)),
+                    plot = f3, width = 6, height = 6)
+  }
+
+  touchderiv <- list(pva = f1, pvaj_grid = f2, pvaj_unfilt_grid = f3)
   return(touchderiv)
 }
 

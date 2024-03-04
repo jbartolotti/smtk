@@ -268,15 +268,15 @@ PROCESS.touch_derivatives <- function(dd)
     ddlong$filt <- data.frame(time = rep(dd$time,4))
     ddlong$scalepm1 <- data.frame(time = rep(dd$time,4))
     ddlong$z <- data.frame(time = rep(dd$time,4))
+    ddlong$raw <- data.frame(time = rep(dd$time,4))
 
     out[,sprintf('%s_position',i)] = dd[,sprintf('touch_%s',i)]
     #vel_smooth = predict(loess(vel ~ time, data.frame(time = time[1:(numt-1)], vel = diff(out[,sprintf('%s_position',i)]))))
     #accel_smooth = predict(loess(accel ~ time, data.frame(time = time[1:(numt-2)], accel = diff(vel_smooth))))
     #jerk_smooth = predict(loess(jerk ~ time, data.frame(time = time[1:(numt-3)], jerk = diff(accel_smooth))))
-    vel_filt <- signal::filtfilt(resources$deriv_filter, diff(out[,sprintf('%s_position',i)]))
-    accel_filt <- signal::filtfilt(resources$deriv_filter, diff(vel_filt))
-    jerk_filt <- signal::filtfilt(resources$deriv_filter, diff(accel_filt))
-
+    vel_filt <- signal::filtfilt(resources$deriv_filter, diff(out[,sprintf('%s_position',i)])/dd$delta_time[2:numt]  )
+    accel_filt <- signal::filtfilt(resources$deriv_filter, diff(vel_filt)/dd$delta_time[2:(numt-1)])
+    jerk_filt <- signal::filtfilt(resources$deriv_filter, diff(accel_filt)/dd$delta_time[2:(numt-1)])
 
 
 
@@ -291,6 +291,15 @@ PROCESS.touch_derivatives <- function(dd)
                               out[,sprintf('%s_jerk',i)])
     ddlong$filt$degree <- rep(c('position','velocity','acceleration','jerk'), each = numt)
     ddlong$filt$type <- 'filtered'
+
+    position_raw <- dd[,sprintf('touch_%s',i)]
+    vel_raw <- dd[,sprintf('%s_velocity_raw',i)]
+    accel_raw <- dd[,sprintf('%s_acceleration_raw',i)]
+    jerk_raw <- dd[,sprintf('%s_jerk_raw',i)]
+
+    ddlong$raw$value <- c(c(position_raw,vel_raw,accel_raw,jerk_raw))
+    ddlong$raw$degree <- rep(c('position','velocity','acceleration','jerk'), each = numt)
+    ddlong$raw$type <- 'raw'
 
     out[,sprintf('%s_position_scale_plusminus1',i)] = UTILS.range_plusminus1(out[,sprintf('%s_position',i)], na.rm = TRUE)
     out[,sprintf('%s_velocity_scale_plusminus1',i)] = UTILS.range_plusminus1(out[,sprintf('%s_velocity',i)], na.rm = TRUE)
