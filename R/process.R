@@ -292,10 +292,18 @@ PROCESS.touch_derivatives <- function(dd)
     ddlong$filt$degree <- rep(c('position','velocity','acceleration','jerk'), each = numt)
     ddlong$filt$type <- 'filtered'
 
-    position_raw <- dd[,sprintf('touch_%s',i)]
-    vel_raw <- dd[,sprintf('%s_velocity_raw',i)]
-    accel_raw <- dd[,sprintf('%s_acceleration_raw',i)]
-    jerk_raw <- dd[,sprintf('%s_jerk_raw',i)]
+    if(i == 'dist'){
+      position_raw <- dd$travel
+      vel_raw <- dd$travel_velocity_raw
+      accel_raw <- dd$travel_acceleration_raw
+      jerk_raw <- dd$travel_jerk_raw
+
+    } else {
+      position_raw <- dd[,sprintf('touch_%s',i)]
+      vel_raw <- dd[,sprintf('%s_velocity_raw',i)]
+      accel_raw <- dd[,sprintf('%s_acceleration_raw',i)]
+      jerk_raw <- dd[,sprintf('%s_jerk_raw',i)]
+    }
 
     ddlong$raw$value <- c(c(position_raw,vel_raw,accel_raw,jerk_raw))
     ddlong$raw$degree <- rep(c('position','velocity','acceleration','jerk'), each = numt)
