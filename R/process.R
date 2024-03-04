@@ -276,7 +276,7 @@ PROCESS.touch_derivatives <- function(dd)
     #jerk_smooth = predict(loess(jerk ~ time, data.frame(time = time[1:(numt-3)], jerk = diff(accel_smooth))))
     vel_filt <- signal::filtfilt(resources$deriv_filter, diff(out[,sprintf('%s_position',i)])/dd$delta_time[2:numt]  )
     accel_filt <- signal::filtfilt(resources$deriv_filter, diff(vel_filt)/dd$delta_time[2:(numt-1)])
-    jerk_filt <- signal::filtfilt(resources$deriv_filter, diff(accel_filt)/dd$delta_time[2:(numt-1)])
+    jerk_filt <- signal::filtfilt(resources$deriv_filter, diff(accel_filt)/dd$delta_time[2:(numt-2)])
 
 
 
